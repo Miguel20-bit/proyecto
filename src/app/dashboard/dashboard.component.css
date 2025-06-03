@@ -1,0 +1,27 @@
+#semaforos {
+      display: flex;
+      gap: 2rem;
+      margin: 1rem 0;
+    }
+    .semaforo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: bold;
+    }
+    .luz {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-top: 5px;
+      border: 2px solid #000;
+    }
+    table {
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      text-align: center;
+    }

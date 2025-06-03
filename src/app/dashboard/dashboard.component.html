@@ -1,0 +1,71 @@
+<meta charset="UTF-8">
+  <title>Dashboard de Calidad del Aire</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h2>Dashboard de Calidad del Aire</h2>
+  <ul>
+    <li><strong>CO₂:</strong> <span id="co2">--</span> ppm</li>
+    <li><strong>PM2.5:</strong> <span id="pm25">--</span> µg/m³</li>
+    <li><strong>PM10:</strong> <span id="pm10">--</span> µg/m³</li>
+    <li><strong>TVOC:</strong> <span id="tvoc">--</span> ppb</li>
+    <li><strong>AQI:</strong> <span id="aqi">--</span></li>
+  </ul>
+
+  <div id="semaforos">
+    <div class="semaforo">
+      AQI
+      <div id="luz-aqi" class="luz"></div>
+    </div>
+    <div class="semaforo">
+      TVOC
+      <div id="luz-tvoc" class="luz"></div>
+    </div>
+  </div>
+
+  <div id="alerta" style="color: red; font-weight: bold;"></div>
+  <p id="consejo" style="font-style: italic;"></p>
+
+  <canvas id="grafica" width="600" height="300"></canvas>
+
+  <h3>Pronóstico de AQI (3 días)</h3>
+  <canvas id="graficoPronostico" width="600" height="300"></canvas>
+
+  <h3>Historial de alertas</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Hora</th>
+        <th>Color</th>
+        <th>Nivel ICA</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-alertas"></tbody>
+  </table>
+
+  <h3>Guía de Consejos según Nivel</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Tipo</th>
+      <th>Rango</th>
+      <th>Color</th>
+      <th>Consejo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>AQI</td><td>0-50</td><td style="color:green">Verde</td><td>Aire limpio. Disfruta tus actividades al aire libre.</td></tr>
+    <tr><td>AQI</td><td>51-100</td><td style="color:yellow">Amarillo</td><td>Aceptable. Personas sensibles pueden notar molestias.</td></tr>
+    <tr><td>AQI</td><td>101-150</td><td style="color:orange">Naranja</td><td>Evita exposición prolongada si eres vulnerable.</td></tr>
+    <tr><td>AQI</td><td>151-200</td><td style="color:red">Rojo</td><td>Reduce actividades al aire libre.</td></tr>
+    <tr><td>AQI</td><td>201-300</td><td style="color:purple">Púrpura</td><td>Peligroso para todos. Permanece en interiores.</td></tr>
+    <tr><td>AQI</td><td>301+</td><td style="color:brown">Marrón</td><td>Muy peligroso. Quédate dentro y evita ventilar.</td></tr>
+
+    <tr><td>TVOC</td><td>0–65</td><td style="color:green">Verde</td><td>Sin riesgo. Bien ventilado.</td></tr>
+    <tr><td>TVOC</td><td>66–220</td><td style="color:yellow">Amarillo</td><td>Calidad aceptable, evita productos químicos.</td></tr>
+    <tr><td>TVOC</td><td>221–660</td><td style="color:orange">Naranja</td><td>Nivel moderado. Ventila el ambiente.</td></tr>
+    <tr><td>TVOC</td><td>661–2200</td><td style="color:red">Rojo</td><td>Alta concentración. Evita uso de aerosoles.</td></tr>
+    <tr><td>TVOC</td><td>2201–5500</td><td style="color:purple">Púrpura</td><td>Muy contaminado. Abandona el lugar si puedes.</td></tr>
+    <tr><td>TVOC</td><td>5501+</td><td style="color:brown">Marrón</td><td>Extremadamente tóxico. Riesgo grave para la salud.</td></tr>
+  </tbody>
+</table>
