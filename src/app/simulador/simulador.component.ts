@@ -43,10 +43,9 @@ export class SimuladorComponent implements AfterViewInit, OnDestroy {
   private loadPahoScript(): Promise<void> {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.1.0/paho-mqtt.min.js';
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js'; // Versión 1.0.1
       script.async = true;
       script.onload = () => {
-        // Pequeño delay para asegurar que Paho está disponible
         setTimeout(() => {
           if (typeof window['Paho'] !== 'undefined') {
             resolve();
