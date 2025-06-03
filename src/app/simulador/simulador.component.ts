@@ -92,23 +92,26 @@ export class SimuladorComponent implements AfterViewInit, OnDestroy {
   }
 
   private publicarDatos(): void {
-    if (!this.client || !this.client.isConnected()) {
-      console.warn('MQTT no conectado, omitiendo publicación');
-      return;
-    }
-
-    const payload = JSON.stringify({
-      temperatura: Math.random() * 100,
-      humedad: Math.random() * 100,
-      timestamp: new Date().toISOString()
-    });
-
-    const message = new window['Paho'].MQTT.Message(payload);
-    message.destinationName = 'datos/sensor';
-    this.client.send(message);
-
-    console.log('📤 Publicado:', payload);
+  if (!this.client || !this.client.isConnected()) {
+    console.warn('MQTT no conectado, omitiendo publicación');
+    return;
   }
+
+  // Simula valores para cada tópico
+  const co2 = Math.random() * 1000;
+  const pm25 = Math.random() * 100;
+  const pm10 = Math.random() * 100;
+  const tvoc = Math.random() * 1000;
+  const ica = Math.random() * 300;
+
+  this.client.send("/air/co2", co2.toString());
+  this.client.send("/air/pm25", pm25.toString());
+  this.client.send("/air/pm10", pm10.toString());
+  this.client.send("/air/tvoc", tvoc.toString());
+  this.client.send("/air/ica", ica.toString());
+
+  console.log('📤 Publicados:', { co2, pm25, pm10, tvoc, ica });
+}
 
   ngOnDestroy(): void {
     if (this.intervalo) {
