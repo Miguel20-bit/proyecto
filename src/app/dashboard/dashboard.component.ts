@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
   tvoc: string = '--';
   aqi: string = '--';
   alerta: string = '';
-  consejo: string = '';
+  consejo: string = ''; 
 
 
   ngOnInit(): void {
