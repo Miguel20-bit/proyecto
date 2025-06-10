@@ -16,12 +16,12 @@ const db = mysql.createConnection({
 
 // Endpoint para guardar un dato
 app.post('/api/datos', (req, res) => {
-  const { topico, valor, unidad } = req.body;
-  if (!topico || valor === undefined) {
+  const { sensor_id, topico, valor, unidad } = req.body;
+  if (!sensor_id || !topico || valor === undefined) {
     return res.status(400).json({ error: 'Faltan datos requeridos' });
   }
-  const sql = 'INSERT INTO datos_sensores (topico, valor, unidad) VALUES (?, ?, ?)';
-  const params = [topico, valor, unidad];
+  const sql = 'INSERT INTO datos_sensores (sensor_id, topico, valor, unidad) VALUES (?, ?, ?, ?)';
+  const params = [sensor_id, topico, valor, unidad];
   db.query(sql, params, (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ id: result.insertId });
