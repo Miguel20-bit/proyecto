@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core'; // Agregamos AfterViewInit
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Chart, registerables } from 'chart.js';
 import { Client, Message } from 'paho-mqtt';
 
@@ -7,30 +7,29 @@ import { Client, Message } from 'paho-mqtt';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit, AfterViewInit { // Implementamos AfterViewInit
+export class DashboardComponent implements OnInit, AfterViewInit {
   private client!: Client;
   private grafica!: Chart;
   private graficoPronostico!: Chart;
+  private graficaHistoricoMensual!: Chart; 
 
-  // Variables para mantener los valores actuales y poder mostrarlos en el HTML
   co2: string = '--';
   pm25: string = '--';
   pm10: string = '--';
   tvoc: string = '--';
   aqi: string = '--';
   alerta: string = '';
-  consejo: string = ''; 
+  consejo: string = '';
 
-
-  ngOnInit(): void {
+  ngOnInit(): void { //ejecuta una vez
     Chart.register(...registerables);
 
-    this.client = new Client("localhost", 9001, "dashboard_" + Math.random().toString(16).substr(2, 8));
+    this.client = new Client("localhost", 9001, "dashboard_" + Math.random().toString(16).substr(2, 8)); 
 
     this.client.onConnectionLost = err => console.error("Conexión perdida", err);
     this.client.onMessageArrived = this.recibirMensaje.bind(this);
 
-    this.client.connect({
+    this.client.connect({ //sub
       onSuccess: () => {
         console.log("Dashboard conectado");
         this.client.subscribe("/air/co2");
@@ -41,36 +40,33 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
       }
     });
 
-    // Inicializa las gráficas aquí, pero el update se hará en recibirMensaje
-    // para asegurar que los datos iniciales se carguen después de la conexión
     this.initCharts();
   }
 
   ngAfterViewInit(): void {
-    // Esto asegura que el DOM esté listo antes de intentar acceder a los elementos del semáforo.
-    // También puedes asegurar que los valores iniciales de las luces estén apagados.
+
     this.apagarTodasLasLucesSemaforo("aqi");
-    this.apagarTodasLasLucesSemaforo("tvoc"); // Aunque TVOC no tiene semáforo visual, es buena práctica si en el futuro se añade
+    this.apagarTodasLasLucesSemaforo("tvoc");
   }
 
-  initCharts(): void {
+  initCharts(): void { //iniciaizar grap
     this.grafica = new Chart("grafica", {
       type: 'line',
       data: {
         labels: [],
         datasets: [
-          { label: "CO₂ (ppm)", data: [], borderColor: "red", backgroundColor: "rgba(255, 0, 0, 0.2)", fill: true, tension: 0.3 },
-          { label: "PM2.5 (µg/m³)", data: [], borderColor: "blue", backgroundColor: "rgba(0, 0, 255, 0.2)", fill: true, tension: 0.3 },
-          { label: "PM10 (µg/m³)", data: [], borderColor: "green", backgroundColor: "rgba(0, 255, 0, 0.2)", fill: true, tension: 0.3 },
-          { label: "TVOC (ppb)", data: [], borderColor: "orange", backgroundColor: "rgba(255, 165, 0, 0.2)", fill: true, tension: 0.3 }
+          { label: "CO₂ (ppm)", data: [], borderColor: "red", backgroundColor: "rgba(255, 0, 0, 0.05)", fill: true, tension: 0.0, borderWidth: 2 }, 
+          { label: "PM2.5 (µg/m³)", data: [], borderColor: "blue", backgroundColor: "rgba(0, 0, 255, 0.05)", fill: true, tension: 0.0, borderWidth: 2 }, 
+          { label: "PM10 (µg/m³)", data: [], borderColor: "green", backgroundColor: "rgba(0, 255, 0, 0.05)", fill: true, tension: 0.0, borderWidth: 2 }, 
+          { label: "TVOC (ppb)", data: [], borderColor: "orange", backgroundColor: "rgba(255, 165, 0, 0.05)", fill: true, tension: 0.0, borderWidth: 2 } 
         ]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Permite que el gráfico no mantenga su relación de aspecto original
+        maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false // Ocultamos la leyenda por defecto, la creamos con HTML para mayor control
+            display: false
           }
         },
         scales: {
@@ -89,6 +85,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
       }
     });
 
+    //Segunda gráfica
     this.graficoPronostico = new Chart("graficoPronostico", {
       type: "bar",
       data: {
@@ -106,7 +103,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false // Ocultamos la leyenda para esta gráfica
+            display: false
           }
         },
         scales: {
@@ -123,6 +120,55 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
         }
       }
     });
+
+
+    //Grafica de historial del mes 
+    const { labels, data, backgroundColors } = this.getMonthlyAQIData(); 
+    this.graficaHistoricoMensual = new Chart("graficaHistoricoMensual", {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "AQI Máximo",
+          data: data,
+          backgroundColor: backgroundColors, 
+          borderColor: "#2a2a2a",
+          borderWidth: 1,
+          borderRadius: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: { 
+            backgroundColor: '#444',
+            titleColor: '#fff',
+            bodyColor: '#ddd',
+            borderColor: '#555',
+            borderWidth: 1,
+            cornerRadius: 5,
+            displayColors: false,
+          }
+        },
+        scales: {
+          x: {
+            title: { display: true, text: 'Mes', color: '#bbb' },
+            ticks: { color: '#bbb' },
+            grid: { color: '#444' }
+          },
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'AQI Máximo', color: '#bbb' },
+            ticks: { color: '#bbb' },
+            grid: { color: '#444' }
+          }
+        }
+      }
+    });
   }
 
 
@@ -133,7 +179,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
 
     switch (topic) {
       case "/air/co2":
-        this.co2 = valor.toFixed(2); // Usar las variables de la clase
+        this.co2 = valor.toFixed(2);
         this.actualizarGrafica(0, hora, valor);
         break;
       case "/air/pm25":
@@ -147,7 +193,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
       case "/air/tvoc":
         this.tvoc = valor.toFixed(2);
         this.actualizarGrafica(3, hora, valor);
-        this.actualizarConsejoGeneral("tvoc", valor); // Asegúrate de que el consejo se actualice
+        this.actualizarConsejoGeneral("tvoc", valor);
         break;
       case "/air/ica":
         this.aqi = valor.toFixed(0);
@@ -160,11 +206,6 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
     }
   }
 
-  // Eliminar actualizarTexto ya que ahora usamos binding directo a las propiedades de la clase
-  // actualizarTexto(id: string, valor: any) {
-  //   const el = document.getElementById(id);
-  //   if (el) el.textContent = valor.toString();
-  // }
 
   actualizarGrafica(indice: number, hora: string, valor: number): void {
     const chart = this.grafica;
@@ -173,7 +214,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
       (chart.data.labels ?? []).push(hora);
       chart.data.datasets.forEach((ds, i) => {
         if (ds.data.length < (chart.data.labels ?? []).length - 1) {
-          ds.data.push(NaN); // Usar NaN para puntos de datos faltantes en el gráfico
+          ds.data.push(NaN);
         }
       });
     }
@@ -185,24 +226,24 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
     chart.update();
   }
 
-  // Modificación importante para el semáforo
+  // importante para el semáforo
   actualizarSemaforo(tipo: string, valor: number, rangos: number[]): string {
     const coloresNombres = ["green", "yellow", "orange", "red", "purple", "brown"];
-    const coloresHex = ["#4caf50", "#ffeb3b", "#ff9800", "#f44336", "#9c27b0", "#795548"]; // Colores más vibrantes
+    const coloresHex = ["#4caf50", "#ffeb3b", "#ff9800", "#f44336", "#9c27b0", "#795548"];
 
     let colorIndex = coloresNombres.findIndex((_, i) => valor <= (rangos[i] || Infinity));
-    if (colorIndex === -1) colorIndex = coloresNombres.length - 1; // Si no encuentra, es el último (brown)
+    if (colorIndex === -1) colorIndex = coloresNombres.length - 1;
 
     const colorNombre = coloresNombres[colorIndex];
     const colorHex = coloresHex[colorIndex];
 
-    this.apagarTodasLasLucesSemaforo(tipo); // Apaga todas las luces primero
+    this.apagarTodasLasLucesSemaforo(tipo);
 
     const luzActiva = document.getElementById(`light-${colorNombre}`);
     if (luzActiva) {
       luzActiva.classList.add(`active-${colorNombre}`);
     }
-    return colorNombre; // Retorna el nombre del color para usarlo en la tabla
+    return colorNombre;
   }
 
   apagarTodasLasLucesSemaforo(tipo: string): void {
@@ -234,7 +275,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
       else if (valor <= 5500) mensaje = "Muy contaminado. Abandona el lugar si es posible.";
       else mensaje = "Extremadamente tóxico. Riesgo grave para la salud.";
     }
-    this.consejo = mensaje; // Actualizar la propiedad de la clase
+    this.consejo = mensaje;
   }
 
   agregarFilaAlerta(hora: string, color: string, ica: number): void {
@@ -247,7 +288,7 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
       "purple": "#9c27b0",
       "brown": "#795548"
     };
-    const hexColor = coloresMap[color] || color; // Usa el color mapeado o el color original
+    const hexColor = coloresMap[color] || color;
 
     fila.innerHTML = `
       <td>${hora}</td>
@@ -269,7 +310,6 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
   }
 
   actualizarPronostico(): void {
-    // Asegurarse de que `this.aqi` sea un número válido
     const aqiActual = parseFloat(this.aqi || '100');
     const pronosticoData = [
       this.generarValorPronostico(aqiActual, 1),
@@ -278,14 +318,13 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
     ];
     this.graficoPronostico.data.datasets[0].data = pronosticoData;
 
-    // Actualizar colores de las barras según el valor de AQI
     const backgroundColors = pronosticoData.map(aqiValue => {
         if (aqiValue <= 50) return "#4caf50";
         else if (aqiValue <= 100) return "#ff9800";
         else if (aqiValue <= 150) return "#f44336";
-        else if (aqiValue <= 200) return "#9c27b0"; // Purpura
-        else if (aqiValue <= 300) return "#8d6e63"; // Marron (un tono diferente al brown general para la barra)
-        else return "#795548"; // Marron oscuro
+        else if (aqiValue <= 200) return "#9c27b0";
+        else if (aqiValue <= 300) return "#8d6e63";
+        else return "#795548";
     });
     this.graficoPronostico.data.datasets[0].backgroundColor = backgroundColors;
 
@@ -298,9 +337,63 @@ export class DashboardComponent implements OnInit, AfterViewInit { // Implementa
     return Math.max(0, Math.round(base + variacion));
   }
 
-  // Este método no se usa directamente en el nuevo diseño, pero lo mantengo
   generarAQI(): number {
     const base = parseFloat(this.aqi || '100');
     return Math.max(0, Math.round(base + (Math.random() * 60 - 30)));
+  }
+
+  getMonthlyAQIData(): { labels: string[], data: number[], backgroundColors: string[] } {
+    const months = [
+      'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'
+    ];
+    const currentDate = new Date();
+    const currentMonthIndex = currentDate.getMonth(); 
+
+    const labels: string[] = [];
+    const data: number[] = [];
+    const backgroundColors: string[] = [];
+
+
+
+    //TABLA PARA los últimos 12 meses
+    for (let i = 0; i < 12; i++) {
+      const monthIndex = (currentMonthIndex - (11 - i) + 12) % 12; 
+      const yearOffset = (currentMonthIndex - (11 - i) < 0) ? -1 : 0; 
+      const year = currentDate.getFullYear() + yearOffset;
+
+      labels.push(`${months[monthIndex]} ${year % 100}`); 
+
+
+      let aqiValue;
+      switch (monthIndex) {
+        case 0: aqiValue = 85; break; // Ene
+        case 1: aqiValue = 110; break; // Feb
+        case 2: aqiValue = 95; break; // Mar
+        case 3: aqiValue = 130; break; // Abr
+        case 4: aqiValue = 155; break; // May
+        case 5: aqiValue = 70; break; // Jun
+        case 6: aqiValue = 60; break; // Jul
+        case 7: aqiValue = 80; break; // Ago
+        case 8: aqiValue = 105; break; // Sep
+        case 9: aqiValue = 120; break; // Oct
+        case 10: aqiValue = 140; break; // Nov
+        case 11: aqiValue = 90; break; // Dic
+        default: aqiValue = 75;
+      }
+      aqiValue += Math.floor(Math.random() * 20) - 10;
+      aqiValue = Math.max(20, aqiValue); 
+
+      data.push(aqiValue);
+
+      if (aqiValue <= 50) backgroundColors.push("#4caf50"); // Verde
+      else if (aqiValue <= 100) backgroundColors.push("#ffeb3b"); // Amarillo
+      else if (aqiValue <= 150) backgroundColors.push("#ff9800"); // Naranja
+      else if (aqiValue <= 200) backgroundColors.push("#f44336"); // Rojo
+      else if (aqiValue <= 300) backgroundColors.push("#9c27b0"); // Púrpura
+      else backgroundColors.push("#795548"); // Marrón
+    }
+
+    return { labels, data, backgroundColors };
   }
 }

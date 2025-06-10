@@ -1,13 +1,13 @@
 <div class="dashboard-container">
   <div class="header-section">
     <div class="app-title">Índice de Calidad del Aire (AQI) de Mexico | Contaminación del Aire</div>
-    <div class="app-title">TITULO DE APP</div> </div>
+  </div>
 
   <div class="main-content-wrapper">
     <div class="scrollable-content">
       <div class="card chart-card">
-        <canvas id="grafica"></canvas>
-        <div class="chart-legend"> 
+        <h3>Monitoreo de Contaminantes (Tiempo Real)</h3> <canvas id="grafica"></canvas>
+        <div class="chart-legend">
           <div class="legend-item"><span class="legend-color red"></span> CO₂ (ppm)</div>
           <div class="legend-item"><span class="legend-color blue"></span> PM2.5 (µg/m³)</div>
           <div class="legend-item"><span class="legend-color green"></span> PM10 (µg/m³)</div>
@@ -16,7 +16,7 @@
       </div>
 
       <div class="card forecast-card">
-        <h3>Pronóstico de AQI (3 días)</h3>
+        <h3>Pronóstico de Aire en 3 días</h3>
         <canvas id="graficoPronostico"></canvas>
       </div>
 
@@ -25,17 +25,26 @@
         <div class="contaminant-info-grid">
           <div class="contaminant-info-item">
             <div class="label">Partículas (PM2.5)</div>
-            <div class="value">{{ pm25 }} µg/m³</div> </div>
+            <div class="value">{{ pm25 }} µg/m³</div>
+          </div>
           <div class="contaminant-info-item">
             <div class="label">Partículas (PM10)</div>
-            <div class="value">{{ pm10 }} µg/m³</div> </div>
+            <div class="value">{{ pm10 }} µg/m³</div>
+          </div>
           <div class="contaminant-info-item">
             <div class="label">Dióxido de carbono (CO2)</div>
-            <div class="value">{{ co2 }} ppm</div> </div>
+            <div class="value">{{ co2 }} ppm</div>
+          </div>
            <div class="contaminant-info-item">
             <div class="label">Compuestos Orgánicos Volátiles Totales (TVOC)</div>
-            <div class="value">{{ tvoc }} ppb</div> </div>
+            <div class="value">{{ tvoc }} ppb</div>
+          </div>
         </div>
+      </div>
+
+      <div class="card monthly-history-card">
+        <h3>AQI Máximo Histórico Mensual (Últimos 12 Meses)</h3>
+        <canvas id="graficaHistoricoMensual"></canvas>
       </div>
 
       <div class="card guidance-card">
@@ -80,11 +89,9 @@
           <tbody id="tabla-alertas"></tbody>
         </table>
       </div>
-    </div>
-
+    </div> 
     <div class="sidebar-right">
       <div class="traffic-light-container">
-        <img src="/assets/semaforo.png" alt="Traffic Light" class="traffic-light-base">
         <div class="light-bulb red" id="light-red"></div>
         <div class="light-bulb yellow" id="light-yellow"></div>
         <div class="light-bulb green" id="light-green"></div>
@@ -97,5 +104,6 @@
         <p id="alerta">{{ alerta }}</p>
       </div>
     </div>
-  </div>
-</div>
+  </div> 
+</div> 
+

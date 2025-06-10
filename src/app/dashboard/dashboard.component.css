@@ -1,16 +1,16 @@
 :host {
   display: block;
-  font-family: 'Arial', sans-serif; /* Puedes cambiar la fuente */
-  background-color: #333333; /* Fondo oscuro similar al ejemplo */
-  color: #fff; /* Texto blanco para contraste */
+  font-family: 'Arial', sans-serif; 
+  background-color: #f0f9f8; 
+  color: #141414; 
   padding: 20px; 
 }
 
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 40px); /* Ajusta la altura para que ocupe casi toda la pantalla */
-  overflow: hidden; /* Evita scroll en el contenedor principal */
+  height: calc(100vh - 40px); 
+  overflow: hidden; 
 }
 
 .header-section {
@@ -18,7 +18,7 @@
   justify-content: space-between;
   align-items: center;
   padding-bottom: 20px;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #f0f9f8;
   margin-bottom: 20px;
 }
 
@@ -30,48 +30,64 @@
 .main-content-wrapper {
   display: flex;
   flex-grow: 1;
-  overflow: hidden; /* Para manejar el scroll interno */
+  overflow: hidden; 
   gap: 20px;
 }
 
 .scrollable-content {
   flex-grow: 1;
-  overflow-y: auto; /* Habilitar el scroll vertical */
-  padding-right: 15px; /* Espacio para la barra de scroll */
+  overflow-y: auto; 
+  padding-right: 15px; 
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
+/* Semaforo */
 .sidebar-right {
   flex-shrink: 0;
-  width: 280px; /* Ancho fijo para la barra lateral del semáforo */
+  width: 280px; 
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #2a2a2a; /* Color de fondo para la barra lateral */
+  background-color: #222f3b; 
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(113, 26, 26, 0.2);
 }
 
 .card {
-  background-color: #2a2a2a;
+  background-color: #ffffff;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.card h3 {
+  text-align: center;
+  margin-bottom: 15px; 
+}
+
+.chart-card h3,
+.forecast-card h3,
+.principal-contaminants-card h3,
+.guidance-card h3,
+.alerts-history-card h3 {
+  text-align: center;
+  margin-bottom: 15px; 
+}
+
 /* Estilo para las gráficas */
 .chart-card canvas {
-  max-height: 400px; /* Altura máxima para la gráfica de línea */
+  max-height: 400px; 
+  background-color: #ffffff;
 }
 
 .forecast-card canvas {
-  max-height: 300px; /* Altura máxima para la gráfica de barras */
+  max-height: 300px; 
+  background-color: #ffffff;
 }
 
-/* Leyenda de la gráfica de línea */
 .chart-legend {
   display: flex;
   flex-wrap: wrap;
@@ -109,7 +125,7 @@
 }
 
 .contaminant-info-item {
-  background-color: #444;
+  background-color: #c6e564;
   padding: 15px;
   border-radius: 6px;
   text-align: center;
@@ -117,7 +133,7 @@
 
 .contaminant-info-item .label {
   font-size: 0.9em;
-  color: #bbb;
+  color: #141414;
   margin-bottom: 5px;
 }
 
@@ -130,49 +146,43 @@
 table {
   width: 100%;
   margin-top: 15px;
-  border-collapse: separate; /* Cambiado a separate para border-radius */
+  border-collapse: separate; 
   border-spacing: 0;
-  border-radius: 8px; /* Bordes redondeados para la tabla */
-  overflow: hidden; /* Para que el border-radius funcione en las celdas */
+  border-radius: 8px; 
+  overflow: hidden; 
 }
 
 th, td {
-  border: 1px solid #444;
+  border: .5px solid #cdcdcd;
   padding: 10px 15px;
   text-align: left;
-  background-color: #3a3a3a; /* Fondo para celdas */
+  background-color: #ffffff; 
 }
 
 th {
-  background-color: #555; /* Fondo para encabezados */
+  background-color: #036564;
   font-weight: bold;
+  color: #ffffff
 }
 
-/* Semáforo */
 .traffic-light-container {
   position: relative;
-  width: 150px; /* Ancho de la imagen del semáforo */
-  height: 350px; /* Ajusta según la proporción de tu imagen */
+  width: 180px; 
+  height: 490px; 
   margin-bottom: 20px;
 }
 
-.traffic-light-base {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
 
 .light-bulb {
   position: absolute;
-  width: 45px; /* Tamaño de la luz */
-  height: 45px;
+  width: 60px; 
+  height: 60px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.7); /* Luz apagada */
-  border: 2px solid #333;
+  background-color: rgba(135, 135, 135, 0.7); 
+  border: 2px solid #616161;
 }
 
-/* Posicionar las luces del semáforo sobre la imagen */
-/* Ajusta estos valores 'top' y 'left' según tu imagen 'semaforo.png' */
+
 .light-bulb.red { top: 15%; left: 35%; }
 .light-bulb.orange { top: 30%; left: 35%; }
 .light-bulb.yellow { top: 45%; left: 35%; }
@@ -181,7 +191,6 @@ th {
 .light-bulb.brown { top: 90%; left: 35%; }
 
 
-/* Clases para activar las luces (serán añadidas por JS) */
 .light-bulb.active-red { background-color: red; box-shadow: 0 0 15px red; }
 .light-bulb.active-yellow { background-color: yellow; box-shadow: 0 0 15px yellow; }
 .light-bulb.active-orange { background-color: orange; box-shadow: 0 0 15px orange; }
@@ -191,44 +200,43 @@ th {
 
 
 .message-box {
-  background-color: #444;
+  background-color: #363946;
   padding: 15px;
   border-radius: 8px;
   text-align: center;
-  margin-top: 20px;
-  width: 100%;
+  margin-top: 30px;
+  width: 87%;
 }
 
 .message-box #consejo {
   font-style: italic;
   margin-bottom: 10px;
+  color: #ffffff;
 }
 
 .message-box #alerta {
-  color: #ff4444; /* Rojo para alertas */
+  color: #ff4444; 
   font-weight: bold;
 }
 
-/* Colores para la tabla de consejos */
-.color-verde { color: #4caf50; }
-.color-amarillo { color: #ffeb3b; }
-.color-naranja { color: #ff9800; }
-.color-rojo { color: #f44336; }
-.color-purpura { color: #9c27b0; }
+.color-verde { color: #60ae62; }
+.color-amarillo { color: #ecd71f; }
+.color-naranja { color: #fc9138; }
+.color-rojo { color: #bc4c44; }
+.color-purpura { color: #ae3bc2; }
 .color-marron { color: #795548; }
 
-/* Estilizar la barra de scroll */
 .scrollable-content::-webkit-scrollbar {
   width: 10px;
 }
 
 .scrollable-content::-webkit-scrollbar-track {
-  background: #2a2a2a;
+  background: #d1d1d1;
   border-radius: 10px;
 }
 
 .scrollable-content::-webkit-scrollbar-thumb {
-  background: #555;
+  background: #a5a5a5;
   border-radius: 10px;
 }
 
@@ -236,10 +244,45 @@ th {
   background: #777;
 }
 
-/* Estilos para las gráficas modernas (Chart.js) */
-/* Puedes agregar más personalización aquí */
+
 canvas {
   background-color: #3a3a3a;
   border-radius: 8px;
   padding: 10px;
+}
+
+
+.monthly-history-card {
+  grid-column: span 2; 
+  background-color: #ffffff; 
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  margin-top: 20px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #141414; 
+}
+
+.monthly-history-card h3 {
+  color: #141414;
+  margin-bottom: 15px;
+  font-size: 1.3em;
+}
+
+.monthly-history-card canvas {
+  width: 100% !important;
+  max-width: 700px; 
+  height: 350px !important; 
+  background-color: #ffffff; 
+  border-radius: 8px; 
+}
+
+@media (max-width: 768px) {
+  .monthly-history-card {
+    grid-column: span 1; 
+  }
 }

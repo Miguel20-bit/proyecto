@@ -24,7 +24,6 @@ export class SimuladorComponent implements AfterViewInit, OnDestroy {
   }
 
   private initMqttConnection(): void {
-    // Intenta cargar Paho si no está disponible
     if (typeof window['Paho'] === 'undefined' || !window['Paho']['MQTT']) {
       this.loadPahoScript()
         .then(() => this.connectToBroker())
@@ -61,7 +60,6 @@ export class SimuladorComponent implements AfterViewInit, OnDestroy {
 
   private connectToBroker(): void {
     try {
-      // Usa 'mqtt-broker' como host cuando esté en Docker (nombre del servicio en docker-compose)
       const host = window.location.hostname === 'localhost' ? 'localhost' : 'mqtt-broker';
       
       this.client = new window['Paho'].MQTT.Client(host, 9001, `simulador_${Math.random().toString(16).substr(2, 8)}`);
