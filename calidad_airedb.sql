@@ -5,6 +5,7 @@ USE calidad_aire;
 -- Crear tabla para guardar datos históricos de los sensores
 CREATE TABLE IF NOT EXISTS datos_sensores (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    sensor_id VARCHAR(50),   
     topico VARCHAR(50) NOT NULL,          -- Ej: /air/pm25, /air/co2
     valor DECIMAL(10,2) NOT NULL,         -- Valor numérico del sensor
     unidad VARCHAR(10),                   -- Ej: µg/m3, ppm, ppb (opcional)
