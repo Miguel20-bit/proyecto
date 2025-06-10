@@ -9,6 +9,7 @@ services:
       - "4200:4200"
     depends_on:
       - mqtt-broker
+      - api
 
   mqtt-broker:
     image: eclipse-mosquitto
@@ -17,3 +18,29 @@ services:
       - "9001:9001"
     volumes:
       - ./mqtt.conf:/mosquitto/config/mosquitto.conf
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: calidad_aire
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./calidad_airedb.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: calidad_aire
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+
+
