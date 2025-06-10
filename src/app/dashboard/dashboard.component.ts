@@ -177,6 +177,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const valor = parseFloat(message.payloadString);
     const hora = new Date().toLocaleTimeString();
 
+    //Guardar en la base de datos usando el API
+    this.guardarEnBaseDeDatos(topic, valor);
+
     switch (topic) {
       case "/air/co2":
         this.co2 = valor.toFixed(2);
@@ -202,9 +205,28 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.actualizarConsejoGeneral("aqi", valor);
         this.agregarFilaAlerta(hora, color, valor);
         this.actualizarPronostico();
+        //Guardar alerta en la base de datos
+        this.guardarAlertaEnBaseDeDatos(color, valor);
         break;
     }
   }
+  // Nuevo método para guardar datos de sensores
+private guardarEnBaseDeDatos(topico: string, valor: number, unidad: string = ""): void {
+  fetch('http://localhost:3000/api/datos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topico, valor, unidad })
+  }).catch(err => console.error('Error al guardar dato en backend:', err));
+}
+
+private guardarAlertaEnBaseDeDatos(color: string, nivel_ica: number): void {
+  fetch('http://localhost:3000/api/alertas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ color, nivel_ica })
+  }).catch(err => console.error('Error al guardar alerta en backend:', err));
+}
+
 
 
   actualizarGrafica(indice: number, hora: string, valor: number): void {
