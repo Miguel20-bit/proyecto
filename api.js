@@ -12,6 +12,8 @@ const db = mysql.createConnection({
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'calidad_aire'
+   // Asegúrate de usar el puerto interno del contenedor
+
 });
 
 // Endpoint para guardar un dato
