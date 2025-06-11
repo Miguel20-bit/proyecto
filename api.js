@@ -8,7 +8,7 @@ app.use(cors());
 
 // Configura tu conexión a MySQL
 const db = mysql.createConnection({
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'host.docker.internal', // Cambia esto si usas Docker
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || 'password',
   database: process.env.DB_NAME || 'calidad_aire'
