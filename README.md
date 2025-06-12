@@ -6,6 +6,7 @@ Este proyecto incluye una aplicación Angular, una API en Node.js y un broker MQ
 - Docker y Docker Compose instalados.
 - Node.js versión 18 o superior.
 - MySQL instalado localmente.
+- Crear la base de datos de calidad_aire
 
 ## Construcción del proyecto
 1. Clona el repositorio:
