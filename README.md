@@ -34,6 +34,7 @@ La base de datos debe crearse manualmente:
 2. Crea la base de datos:
    ```sql
    CREATE DATABASE calidad_aire;
+
    USE calidad_aire;
    ```
 3. Crea las tablas necesarias:
