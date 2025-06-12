@@ -59,3 +59,4 @@ La base de datos debe crearse manualmente:
 
 ## Notas
 - Usa `host.docker.internal` como host para conectar la API a la base de datos local.
+- Verifique que en el docker-compose.yml y api.js tengan la contraseña correcta del usuario root.
