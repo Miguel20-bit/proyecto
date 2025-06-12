@@ -9,13 +9,22 @@ Este proyecto incluye una aplicación Angular, una API en Node.js y un broker MQ
 
 ## Construcción del proyecto
 1. Clona el repositorio:
+   ```bash
    git clone <URL-del-repositorio>
    cd proyecto
+   ```
 
 2. Levanta los servicios con Docker Compose:
+   ```bash
    docker-compose up --build
+   ```
 
-3. Accede a los servicios:
+3. Alternativamente, puedes usar el siguiente script si está configurado en el archivo `package.json`:
+   ```bash
+   npm run start:docker
+   ```
+
+4. Accede a los servicios:
    - **Aplicación Angular**: [http://localhost:4200](http://localhost:4200)
    - **API**: [http://localhost:3000](http://localhost:3000)
 
@@ -43,6 +52,7 @@ La base de datos debe crearse manualmente:
        nivel_ica FLOAT,
        fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
+   ```
 
 ## Notas
 - Usa `host.docker.internal` como host para conectar la API a la base de datos local.
